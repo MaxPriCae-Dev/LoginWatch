@@ -50,7 +50,7 @@ Action:
 Run as SYSTEM or a dedicated local service account.
 Enable “Run with highest privileges.”
 
-Security Notes
+# Security Notes
 
 Use AllSigned policy and code signing to prevent tampering.
 Store your script in a locked‑down folder (NTFS ACLs).
