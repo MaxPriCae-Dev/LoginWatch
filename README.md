@@ -13,16 +13,16 @@ LoginWatch
 -LoginAlert.ps1
 -config.ps1
 
-1. Create your config
+# 1. Create your config
 Edit config.ps1 and insert your Telegram bot token and chat ID
 
-2. (Optional) Sign the script
-# Generate a local self-signed code-signing certificate
+# 2. (Optional) Sign the script
+ Generate a local self-signed code-signing certificate
 New-SelfSignedCertificate -Type CodeSigning -Subject "CN=LocalLoginAlert" `
                          -KeyUsage DigitalSignature `
                          -CertStoreLocation Cert:\LocalMachine\My
 
-# Find the thumbprint and trust it:
+ Find the thumbprint and trust it:
 $thumb = (Get-ChildItem Cert:\LocalMachine\My |
           Where-Object Subject -Match "LocalLoginAlert").Thumbprint
 
@@ -32,14 +32,14 @@ Export-Certificate -Cert Cert:\LocalMachine\My\$thumb `
 Import-Certificate -FilePath .\LocalLoginAlert.cer `
                    -CertStoreLocation Cert:\LocalMachine\Root
 
-# Sign the script
+ Sign the script
 Set-AuthenticodeSignature -FilePath .\LoginAlert.ps1 `
                           -Certificate Cert:\LocalMachine\My\$thumb
 
-3. Enforce script signing
+# 3. Enforce script signing
 Set-ExecutionPolicy AllSigned -Scope LocalMachine
 
-4. Schedule at startup (local)
+# 4. Schedule at startup (local)
 Open Task Scheduler → Create Task
 Trigger: At startup
 Action:
@@ -50,7 +50,7 @@ Action:
 Run as SYSTEM or a dedicated local service account.
 Enable “Run with highest privileges.”
 
-# Security Notes
+## Security Notes
 
 Use AllSigned policy and code signing to prevent tampering.
 Store your script in a locked‑down folder (NTFS ACLs).
