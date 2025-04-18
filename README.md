@@ -53,5 +53,7 @@ Enable “Run with highest privileges.”
 ## Security Notes
 
 Use AllSigned policy and code signing to prevent tampering.
+
 Store your script in a locked‑down folder (NTFS ACLs).
+
 Enable PowerShell logging and file integrity monitoring if possible.
