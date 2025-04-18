@@ -41,13 +41,21 @@ Set-ExecutionPolicy AllSigned -Scope LocalMachine
 
 # 4. Schedule at startup (local)
 Open Task Scheduler → Create Task
+
 Trigger: At startup
+
 Action:
+
   Program:
+  
     C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+    
   Arguments:
+  
     -NoProfile -ExecutionPolicy AllSigned -File "C:\Scripts\LoginAlert\LoginAlert.ps1"
+    
 Run as SYSTEM or a dedicated local service account.
+
 Enable “Run with highest privileges.”
 
 ## Security Notes
