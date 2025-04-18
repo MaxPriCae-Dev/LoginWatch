@@ -17,23 +17,22 @@ LoginWatch
 Edit config.ps1 and insert your Telegram bot token and chat ID
 
 # 2. (Optional) Sign the script
- Generate a local self-signed code-signing certificate
- 
+## Generate a local self-signed code-signing certificate
 New-SelfSignedCertificate -Type CodeSigning -Subject "CN=LocalLoginAlert" 
                          -KeyUsage DigitalSignature 
                          -CertStoreLocation Cert:\LocalMachine\My
 
- Find the thumbprint and trust it:
+# Find the thumbprint and trust it:
 $thumb = (Get-ChildItem Cert:\LocalMachine\My |
           Where-Object Subject -Match "LocalLoginAlert").Thumbprint
 
 Export-Certificate -Cert Cert:\LocalMachine\My\$thumb 
-                  -FilePath .\LocalLoginAlert.cer
+                  -FilePath .\LocalLoginAlert.cer 
 
 Import-Certificate -FilePath .\LocalLoginAlert.cer 
                    -CertStoreLocation Cert:\LocalMachine\Root
 
- Sign the script
+# Sign the script
 Set-AuthenticodeSignature -FilePath .\LoginAlert.ps1 
                           -Certificate Cert:\LocalMachine\My\$thumb
 
