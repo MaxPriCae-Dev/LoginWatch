@@ -17,24 +17,20 @@ LoginWatch
 Edit config.ps1 and insert your Telegram bot token and chat ID
 
 # 2. (Optional) Sign the script
-### Generate a local self-signed code-signing certificate
-New-SelfSignedCertificate -Type CodeSigning -Subject "CN=LocalLoginAlert" 
-                         -KeyUsage DigitalSignature 
-                         -CertStoreLocation Cert:\LocalMachine\My
+### 1. Create the self-signed code-signing certificate
+New-SelfSignedCertificate -Type CodeSigning -Subject "CN=LocalLoginAlert" -KeyUsage DigitalSignature -CertStoreLocation Cert:\LocalMachine\My
 
-### Find the thumbprint and trust it:
-$thumb = (Get-ChildItem Cert:\LocalMachine\My |
-          Where-Object Subject -Match "LocalLoginAlert").Thumbprint
+### 2. Retrieve the thumbprint of the certificate
+$thumb = (Get-ChildItem Cert:\LocalMachine\My | Where-Object Subject -Match "LocalLoginAlert").Thumbprint
 
-Export-Certificate -Cert Cert:\LocalMachine\My\$thumb 
-                  -FilePath .\LocalLoginAlert.cer 
+### 3. Export the certificate to a file
+Export-Certificate -Cert "Cert:\LocalMachine\My\$thumb" -FilePath .\LocalLoginAlert.cer
 
-Import-Certificate -FilePath .\LocalLoginAlert.cer 
-                   -CertStoreLocation Cert:\LocalMachine\Root
+### 4. Import the certificate to the Trusted Root Certification Authorities store
+Import-Certificate -FilePath .\LocalLoginAlert.cer -CertStoreLocation Cert:\LocalMachine\Root
 
-### Sign the script
-Set-AuthenticodeSignature -FilePath .\LoginAlert.ps1 
-                          -Certificate Cert:\LocalMachine\My\$thumb
+### 5. Sign the script using the certificate
+Set-AuthenticodeSignature -FilePath .\LoginAlert.ps1 -Certificate (Get-Item "Cert:\LocalMachine\My\$thumb")
 
 # 3. Enforce script signing
 Set-ExecutionPolicy AllSigned -Scope LocalMachine
